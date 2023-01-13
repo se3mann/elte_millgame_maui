@@ -1,0 +1,49 @@
+@startuml
+
+[App]
+[AppShell]
+
+package "ViewModel" {
+ [DelegateCommand]
+ [MillField]
+ [MillViewModel]
+ [ViewModelBase]
+ [StorageGameBrowserViewModel]
+ [StoredGameEventArgs]
+ [StoredGameViewModel]
+}
+
+package "Model" {
+ [MillEventArgs]
+ [MillGameModel]
+ [PassingEventArgs]
+ [StoredGameBrowserModel]
+ [StoredGameModel]
+}
+
+package "View" {
+ [GamePage]
+ [LoadGamePage]
+ [SaveGamePage]
+ [SettingsGamePage]
+}
+
+package "Persistence" {
+ [Field]
+ [IMillDataAccess]
+ [MillDataException]
+ [MileFileDataAccess]
+ [MillTable]
+ [IStore]
+ [MillStore]
+}
+
+[App] ..> Model : import
+[App] ..> ViewModel : import
+[App] ..> View : import
+[App] ..> Persistence : import
+
+Model ..> Persistence : import
+ViewModel ..> Model : import
+[App] *-- [AppShell]
+@enduml

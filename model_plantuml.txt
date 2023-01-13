@@ -1,0 +1,100 @@
+@startuml
+
+enum Model::Player {
+Player1
+Player2
+}
+enum Model::GamePhase {
+Phase1
+Phase2
+}
+enum Model::Action {
+Adding
+MoveDest
+MoveTarget
+Removing
+}
+
+class Model::MillGameModel {
+-_table: MillTable
+-_currentPlayer: Player
+-_currentPlayerWon: bool
+-_currentPhase: GamePhase
+-_lastField: int
+-_currentAction: Action
+-_dataAccess: IMillDataAccess
+--
++Propetry for all data member
+--
++MillGameModel(IMillDataAccess dataAccess)
++NewGame(): void
++Step(int field): void
+-MoveToTarget(int field): void
+-MoveToTargetNextStep(int field): void
+-AddTokenFromTalon(int field): void
+-RemoveToken(int field): void
+-SwapPlayer(): void
+-SetNextPhaseIfPossible(): void
+-RemoveTokenNextStep(): void
+-SetActionAfterRemove(): void
+-OnGameOver(): void
+-OnGameAdvanced(): void
+-CheckCurrentPlayerWon(): void
+-CheckFieldMovable(int field): bool
+-CheckCurrentPlayerCanRemove(): bool
+-CheckCurrentPlayerCanMove(): bool
+-OnPlayerHasToPass(bool moveToken): void
+..events..
++GameOver(): EventHandler<MillEventArgs>
++GameAdvanced(): EventHandler<MillEventArgs>
++PlayerHasToPass(): EventHandler<PassingEventArgs> 
+..async..
++SaveGameAsync(String path): Task
++LoadGameAsync(String path): Task
+}
+
+class Model::MillEventArgs <Extends EventArgs> {
+-_currentPlayer: Player
+-_currentPlayerWin: bool
+-_currentAction: Action
+-_player1Talon: int
+-_player2Talon: int
+--
++Getter to all data members
+--
++MillEventArgs(Player currentPlayer, bool currentPlayerWin, Action currentAction, int player1Talon, int player2Talon)
+}
+
+class Model::PassingEventArgs <Extends EventArgs> {
+-_moveToken: bool
+-_currentPlayer: player
+--
++Getter to all data members
+--
++PassingEventArgs(bool moveToken, Player currentPlayer)
+}
+
+class Model::StoredGameBrowserModel {
+-_store : IStore
+--Properties--
++StoredGames: List<StoredGameModel>
+--
++StoredGameBrowserModel(IStore store) : void
+-OnSavesChanged(): void
+..async..
++ UpdateAsync(): Task
+}
+
+class Model::StoredGameModel {
+--Properties--
++Name: String
++Modified: DateTime
+}
+
+Model::MillGameModel -> Model::MillEventArgs
+Model::MillGameModel -> Model::PassingEventArgs
+Model::MillGameModel *-- Model::Player 
+Model::MillGameModel *-- Model::GamePhase 
+Model::MillGameModel *-- Model::Action 
+Model::StoredGameBrowserModel *-- Model::StoredGameModel 
+@enduml

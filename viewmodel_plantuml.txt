@@ -1,0 +1,107 @@
+@startuml
+
+abstract class ViewModel::ViewModelBase <extends INotifyPropertyChanged> {
+ #ViewModelBase: void
+ #OnPropertyChanged(string propertyName) : void
+ ..events..
+ +PropertyChanged: PropertyChangedEventHandler
+}
+
+class ViewModel::DelegateCommand <extends ICommand> {
+ -_execute: Action<Object>
+ -_canExecute: Func<Object, Boolean>
+ --
+ +DelegateCommand(Action<Object> execute) : void
+ +DelegateCommand(Func<Object, Boolean> canExecute, Action<Object> execute) : void
+ +CanExecute(Object? parameter): bool
+ +Execute(Object? parameter) : void
+ +RaiseCanExecuteChanged() : void
+ ..events..
+ +CanExecuteChanged: EventHandler
+}
+
+class ViewModel::MillField <extends ViewModel::ViewModelBase> {
+ -_player: int
+ --Properties--
+ +Player : int
+ +Number: int
+ +X: int
+ +Y: int
+ +InGame: bool
+ +StepCommand: DelegateCommand
+}
+
+class ViewModel::MillViewModel <extends ViewModel::ViewModelBase> {
+ -_model: MillGameModel
+ -_tableSize: int
+--Properties--
++NewGameCommand: DelegateCommand
++LoadGameCommand: DelegateCommand
++SaveGameCommand: DelegateCommand
++ExitCommand: DelegateCommand
++Fields: ObservableCollection<MillField>
++GridPoints:  List<(int, int)>
++CurrentPlayer: String
++CurrentAction: String
++Player1Talon: int
++Player2Talon: int
++TableSize: int
++GameTableRows: RowDefinitionCollection
++GameTableColumns: ColumnDefinitionCollection
+..events..
++NewGame: EventHandler
++LoadGame: EventHandler
++ExitGame: EventHandler
++SaveGame: EventHandler
+--
++MillViewModel(MillGameModel model) : void
+-RefreshTable(): void
+-GenerateTable(): void
+-StepGame(int index): void
+-ModelTableIndexToGridListIndex(int index): int
+-Model_GameAdvanced(object? sender, MillEventArgs e): void
+-Model_PlayerHasToPass(object? sender, PassingEventArgs e): void
+-Model_GameOver(object? sender, MillEventArgs e): void
+-Model_GameCreated(object? sender, MillEventArgs e): void
+- OnNewGame(): void
+-OnLoadGame(): void
+-OnSaveGame(): void
+-OnExitGame(): void
+}
+
+class ViewModel::StoredGameBrowserViewModel <extends ViewModel::ViewModelBase> {
+-_model: StoredGameBrowserModel
+--events--
++GameLoading: EventHandler<StoredGameEventArgs>
++GameSaving: EventHandler<StoredGameEventArgs>
+--Properties--
++NewSaveCommand: DelegateCommand
++StoredGames: ObservableCollection<StoredGameViewModel>
+--
++StoredGameBrowserViewModel(StoredGameBrowserModel model): void
+-UpdateStoredGames(): void
+-Model_StoreChanged(object? sender, EventArgs e): void
+-OnGameLoading(String name): void
+-OnGameSaving(String name): void
+}
+
+class ViewModel::StoredGameEventArgs<extends EventArgs> {
+--Properties--
++Name: string
+}
+
+class ViewModel::StoredGameViewModel <extends ViewModel::ViewModelBase> {
+-_name: string
+-_modified: DateTime
+--Properties--
++Name: string
++Modified: DateTime
++LoadGameCommand: DelegateCommand
++SaveGameCommand: DelegateCommand
+}
+
+ViewModel::MillViewModel *.. ViewModel::MillField
+ViewModel::MillField *.. ViewModel::DelegateCommand
+ViewModel::MillViewModel *.. ViewModel::DelegateCommand
+ViewModel::StoredGameViewModel *.. ViewModel::DelegateCommand
+@enduml

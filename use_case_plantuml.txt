@@ -1,0 +1,12 @@
+@startuml
+
+:Játékos: --> (Új játék)
+:Játékos: --> (Betöltés)
+:Játékos: --> (Mentés)
+:Játékos: ---> (Kilépés)
+:Játékos: ---> (Lépés)
+(Új játék) ..> (Lépés) : precedes
+(Betöltés) ..> (Lépés) : precedes
+(Lépés) ..> (Játék vége) : invokes
+
+@enduml

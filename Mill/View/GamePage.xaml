@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Mill.View.GamePage"
+             Title="Malom">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="GameButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="NavajoWhite" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="WidthRequest" Value="40" />
+                <Style.Triggers>
+                    <!-- a színt a mező zárolása állítja be -->
+                    <DataTrigger TargetType="Button" Binding="{Binding Player}" Value="0">
+                        <Setter Property="BackgroundColor" Value="NavajoWhite" />
+                        <Setter Property="BorderColor" Value="Gray" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Button" Binding="{Binding Player}" Value="1">
+                        <Setter Property="BackgroundColor" Value="Blue" />
+                        <Setter Property="BorderColor" Value="DarkBlue" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Button" Binding="{Binding Player}" Value="2">
+                        <Setter Property="BackgroundColor" Value="Red" />
+                        <Setter Property="BorderColor" Value="DarkRed" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="Button">
+                
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid Margin="4" RowSpacing="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Button Text="Új játék" Command="{Binding NewGameCommand}" Grid.Row="0" HorizontalOptions="Start" />
+        <Button Text="Beállítások" Command="{Binding ExitCommand}" Grid.Row="0" HorizontalOptions="End" />
+
+        <Grid 
+            x:Name="boardGrid"
+            Grid.Row="1"
+            BindableLayout.ItemsSource="{Binding Fields}"
+            RowDefinitions="{Binding GameTableRows}"
+            ColumnDefinitions="{Binding GameTableColumns}"
+            ColumnSpacing="4"
+            RowSpacing="4">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <!-- a rács elemei gombok lesznek -->
+                    <Button
+                        Style="{StaticResource GameButtonStyle}"
+                        Grid.Row="{Binding Y}"
+                        Grid.Column="{Binding X}"
+                        Command="{Binding StepCommand}"
+                        CommandParameter="{Binding Number}"
+                        IsEnabled="{Binding InGame}"
+                        IsVisible="{Binding InGame}"
+                        Padding="0"
+                        FontAttributes="Bold"
+                        FontSize="Medium"
+                        VerticalOptions="FillAndExpand"
+                        HorizontalOptions="FillAndExpand" />
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </Grid>
+        <!-- az információkat alul írjuk ki -->
+        <HorizontalStackLayout HorizontalOptions="Center" Grid.Row="2">
+            <Label Text="Aktuális játékos: " />
+            <Label Text="{Binding CurrentPlayer}" />
+        </HorizontalStackLayout>
+        <HorizontalStackLayout HorizontalOptions="Center" Grid.Row="3">
+            <Label Text="Következő lépés: : " />
+            <Label Text="{Binding CurrentAction}" />
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout HorizontalOptions="Start" Grid.Row="4">
+            <Label Text="Első játékos talon: " />
+            <Label Text="{Binding Player1Talon}" />
+        </HorizontalStackLayout>
+        <HorizontalStackLayout HorizontalOptions="End" Grid.Row="4">
+            <Label Text="Második játékos talon: " />
+            <Label Text="{Binding Player1Talon}" />
+        </HorizontalStackLayout>
+    </Grid>
+</ContentPage>

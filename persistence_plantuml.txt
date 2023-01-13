@@ -1,0 +1,66 @@
+@startuml
+
+
+class Persistence::Field {
+_player: int
+--Properties--
++Player(): int
++Neighbours(): int[]
+--
++Field()
++Field(int player, int[] neighbours)
+}
+abstract class Persistence::IMillDataAccess {
++LoadAsync(String path): Task<MillTable>
++SaveAsync(String path, MillTable table): Task
+}
+class Persistence::MillDataException {
+_path: string
+--Getter--
++Path(): String
+--
++MillDataException(String path)
+}
+class Persistence::MillFileDataAccess <Extends IMillDataAccess> {
+..async..
++SaveAsync(String path, MillTable table): Task
++LoadAsync(String path): Task<MillTable>
+}
+
+class Persistence::MillTable {
+-_lastPlayer: int
+-_currentAction: int
+-_player1UnusedToken: int
+-_player2UnusedToken: int
+-_player1TokenInTable: int
+-_player2TokenInTable: int
+-_fields: Field[]
+-_mills: int[][]
+-MAX_TOKEN: const int
+--Properties--
++Property for all data member except the constant
+--
++GetField(int i): Field
++CheckFieldInMill(int player, int field): bool
+-SetupGameFields(): void
+-SetupMills(): void
+-GetNeighbours(Int32 i): int[]
+}
+
+abstract class Persistence::IStore{
++GetFilesAsync(): Task<IEnumerable<String>>
++GetModifiedTimeAsync(String name): Task<DateTime>
+}
+
+
+class Persistence::MillStore {
+..async..
++GetFilesAsync(): Task<IEnumerable<String>>
++GetModifiedTimeAsync(String name): Task<DateTime>
+}
+
+Persistence::MillFileDataAccess -> Persistence::MillDataException
+Persistence::MillTable *-- Persistence::Field
+Persistence::MillTable <-- Persistence::IMillDataAccess
+Persistence::MillStore <-- Persistence::IStore
+@enduml

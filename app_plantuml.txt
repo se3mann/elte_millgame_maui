@@ -1,0 +1,40 @@
+@startuml
+
+class App <extends Application> {
+-SuspendedGameSavePath: const string
+-_appShell: AppShell
+-_millDataAccess: IMillDataAccess
+-_millGameModel: MillGameModel
+-_millViewModel: MillViewModel
+-_millStore: IStore
+--
++App(): void
+#CreateWindow(IActivationState? activationState): Window
+}
+
+class AppShell <extends Shell> {
+-_millDataAccess: IMillDataAccess
+-_millGameModel: MillGameModel
+-_millViewModel: MillViewModel
+-_timer: IDispatcherTimer
+-_store: IStore
+-_storedGameBrowserModel: StoredGameBrowserModel
+-_storedGameBrowserViewModel: StoredGameBrowserViewModel
+--
++AppShell(IStore millStore,
+        IMillDataAccess millDataAccess,
+        MillGameModel millGameModel,
+        MillViewModel millViewModel): void
+..async..
+-MillGameModel_GameOver(object? sender, MillEventArgs e): void
+-Model_PlayerHasToPass(object? sender, PassingEventArgs e): void
+-MillViewModel_ExitGame(object sender, EventArgs e): void
+-MillViewModel_SaveGame(object sender, EventArgs e): void
+-MillViewModel_LoadGame(object sender, EventArgs e): void
+-MillViewModel_NewGame(object sender, EventArgs e): void
+-StoredGameBrowserViewModel_GameLoading(object? sender, StoredGameEventArgs e): void
+-StoredGameBrowserViewModel_GameSaving(object? sender, StoredGameEventArgs e): void
+}
+
+
+@enduml
